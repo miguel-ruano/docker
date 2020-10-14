@@ -1,0 +1,16 @@
+version: '3'
+volumes: 
+    mongodata:
+        external: false
+
+services: 
+    mongo_server:
+        container_name: mongo_server
+        image: mongo:4.2.2
+        privileged: true
+        tty: true
+        volumes: 
+            - 'mongodata:/data/db'
+        restart: "no"
+        ports: 
+            - "27017:27017"
