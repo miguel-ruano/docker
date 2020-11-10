@@ -1,0 +1,36 @@
+version: '3.5'
+networks: 
+    default:
+        name: postgresql
+        driver: bridge
+
+volumes: 
+    postgres_data:
+        external: false
+    postgres_logs:
+        external: false
+    postgres:
+        external: false
+
+services: 
+    postgresql:
+        container_name: ${CONTAINER_NAME}
+        image: postgres
+        privileged: true
+        tty: true
+        environment:
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_DB=${DB_NAME}
+        volumes: 
+            - 'postgres:/etc/postgresql'
+            - 'postgres_logs:/var/log/postgresql'
+            - 'postgres_data:/var/lib/postgresql'
+        networks: 
+            default: 
+                aliases:
+                    - ${CONTAINER_NAME}
+                    - postgresql
+        restart: "no"
+        ports: 
+            - "5432:5432"
