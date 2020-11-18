@@ -1,7 +1,11 @@
-version: '3'
+version: '3.5'
 networks:
     jenkins:
+        name: ${DEFAULT_NETWORK_NAME}
         driver: bridge
+    sonarqube:
+        external: 
+            name: ${SONARQUBE_NETWORK}
 volumes: 
     jenkins-docker-certs:
         external: false
@@ -9,46 +13,39 @@ volumes:
         external: false
 services:
     jenkins_docker:
-        container_name: jenkins_docker
+        container_name: ${CONTAINER_SERVER_NAME}
         image: docker:dind
         privileged: true
         tty: 
         networks:
             jenkins:
                 aliases: 
-                    - jenkins_docker
+                    - ${CONTAINER_SERVER_NAME}
         environment: 
             - DOCKER_TLS_CERTDIR=/certs
         volumes: 
             - jenkins-docker-certs:/certs/client
             - jenkins-data:/var/jenkins_home
         ports: 
-            - "2376:2376"
+            - "${JENKINS_DOCKER_HOST_PORT}:2376"
         #restart: "no"
         tty: true
     jenkins:
-        container_name: jenkins_server
+        container_name: ${CONTAINER_SERVER_NAME}
         image: jenkinsci/blueocean
         networks: 
             jenkins:
                 aliases: 
-                    - jenkins_server
+                    - ${CONTAINER_SERVER_NAME}
+            sonarqube:
         environment: 
-            - DOCKER_HOST=tcp://docker:2376
+            - DOCKER_HOST=tcp://${CONTAINER_DOCKER_NAME}:2376
             - DOCKER_CERT_PATH=/certs/client
             - DOCKER_TLS_VERIFY=1
         ports: 
-            - "8080:8080"
-            - "50000:50000"
+            - "${JENKINS_WEB_HOST_PORT}:8080"
+            - "${JENKINS_SLAVE_SERVERS_HOST_PORT}:50000"
         volumes: 
             - jenkins-docker-certs:/certs/client:ro
             - jenkins-data:/var/jenkins_home
         tty: true
-
-
-        
-
-
-
-
-        
