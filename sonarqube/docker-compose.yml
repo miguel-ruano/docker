@@ -1,5 +1,8 @@
-version: '3'
-networks: 
+version: '3.5'
+networks:
+    default:
+        name: ${NETWORK_NAME}
+        driver: bridge
     dbs:
         external: 
             name: ${DB_NETWORK}
@@ -30,7 +33,10 @@ services:
             - 'sonarqube_logs:/opt/sonarqube/logs'
             - 'sonarqube_temp:/opt/sonarqube/temp'
         networks: 
-            - dbs
+            dbs:
+            default:
+                aliases: 
+                    - 'sonarqube'
         restart: "no"
         ports:
-            - "9000:9000"
+            - "${SONARQUBE_WEB_HOST_PORT}:9000"
