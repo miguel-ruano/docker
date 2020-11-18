@@ -1,16 +1,23 @@
-version: '3'
+version: '3.5'
 volumes: 
     mongodata:
         external: false
-
+networks: 
+    default:
+        name: mongodb
+        driver: bridge
 services: 
     mongo_server:
-        container_name: mongo_server
+        container_name: ${CONTAINER_NAME}
         image: mongo:4.2.2
         privileged: true
         tty: true
         volumes: 
             - 'mongodata:/data/db'
+        networks: 
+            default:
+                aliases: 
+                    - 'mongodb'
         restart: "no"
         ports: 
-            - "27017:27017"
+            - "${DB_HOST_PORT}:27017"
