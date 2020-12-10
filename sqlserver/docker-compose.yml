@@ -1,0 +1,29 @@
+version: "3.5"
+networks:  
+  default:
+    name: sql_server
+    driver: bridge
+volumes: 
+    sqlvolume:
+        external: false
+services: 
+  sql_server:
+    container_name: ${CONTAINER_NAME}
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    privileged: true
+    tty: true
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
+    networks: 
+      default: 
+        aliases:
+          - ${CONTAINER_NAME}
+          - sql_server
+    restart: "no"
+    ports: 
+      - "${HOST_PORT}:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
