@@ -1,0 +1,20 @@
+version: '3'
+networks: 
+    default:
+        name: oracledb
+        driver: bridge
+services: 
+  oracledb:
+    image: jaspeen/oracle-11g:latest
+    ports:
+      - 1521:1521
+      - 5500:5500
+    privileged: true
+    tty: true
+    restart: "no"
+    environment:
+        - ORACLE_ALLOW_REMOTE=true
+    networks: 
+        default: 
+            aliases:
+                - oracledb
