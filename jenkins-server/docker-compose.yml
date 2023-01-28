@@ -13,14 +13,13 @@ volumes:
         external: false
 services:
     jenkins_docker:
-        container_name: ${CONTAINER_SERVER_NAME}
+        container_name: ${CONTAINER_DOCKER_NAME}
         image: docker:dind
         privileged: true
-        tty: 
         networks:
             jenkins:
                 aliases: 
-                    - ${CONTAINER_SERVER_NAME}
+                    - ${CONTAINER_DOCKER_NAME}
         environment: 
             - DOCKER_TLS_CERTDIR=/certs
         volumes: 
@@ -39,7 +38,7 @@ services:
                     - ${CONTAINER_SERVER_NAME}
             sonarqube:
         environment: 
-            - DOCKER_HOST=tcp://${CONTAINER_DOCKER_NAME}:2376
+            - DOCKER_HOST=tcp://${CONTAINER_SERVER_NAME}:2376
             - DOCKER_CERT_PATH=/certs/client
             - DOCKER_TLS_VERIFY=1
         ports: 
